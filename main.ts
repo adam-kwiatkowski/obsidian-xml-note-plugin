@@ -1,17 +1,22 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import {App, Editor, MarkdownView, Modal, Plugin, PluginSettingTab, Setting} from 'obsidian';
+import ReactModal from "./src/ReactModal";
+import {XMLModal} from "./src/components/XMLModal";
+import {CheckBoxState} from "./src/types/propertyConfig";
 
 // Remember to rename these classes and interfaces!
 
-interface MyPluginSettings {
+interface XmlNotePluginSettings {
 	mySetting: string;
+	checkBoxState: CheckBoxState;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
+const DEFAULT_SETTINGS: XmlNotePluginSettings = {
+	mySetting: 'default',
+	checkBoxState: {}
 }
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class XmlNotePlugin extends Plugin {
+	settings: XmlNotePluginSettings;
 
 	async onload() {
 		await this.loadSettings();
@@ -19,7 +24,7 @@ export default class MyPlugin extends Plugin {
 		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
+			new ReactModal(this.app, XMLModal, this).open();
 		});
 		// Perform additional things with the ribbon
 		ribbonIconEl.addClass('my-plugin-ribbon-class');
@@ -70,9 +75,9 @@ export default class MyPlugin extends Plugin {
 
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 		// Using this function will automatically remove the event listener when this plugin is disabled.
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			console.log('click', evt);
-		});
+		// this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
+		// 	console.log('click', evt);
+		// });
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
@@ -108,9 +113,9 @@ class SampleModal extends Modal {
 }
 
 class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+	plugin: XmlNotePlugin;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: XmlNotePlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}

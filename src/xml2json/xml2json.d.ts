@@ -1,0 +1,1 @@
+export declare function xml2json(xml: string, indent?: boolean): string;
